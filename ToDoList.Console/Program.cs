@@ -66,6 +66,13 @@ public class ToDoList
     {
         int index = 1;
         Console.WriteLine(" --- To-Do List ---\n");
+
+        if (tasks.Count == 0)
+        {
+            Console.WriteLine("Your To-Do list is empty");
+            return;
+        }
+
         foreach (string task in tasks)
         {
 
@@ -96,8 +103,10 @@ public class ToDoList
 
         if (int.TryParse(input, out int index) && index > 0 && index <= tasks.Count)
         {
-            tasks[index - 1] += " [x]";
-            Console.WriteLine($"Task marked complete: {tasks[index - 1]}");
+            if (!tasks[index - 1].EndsWith("[x]")) {
+                tasks[index - 1] += " [x]";
+                Console.WriteLine($"Task marked complete: {tasks[index - 1]}");
+            }
         }
         else
         {
