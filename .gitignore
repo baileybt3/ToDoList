@@ -1,0 +1,12 @@
+# Build results
+bin/
+obj/
+
+#VS
+.vs/
+*.user
+*.suo
+
+# OS Files
+.DS_Store
+Thumbs.db
