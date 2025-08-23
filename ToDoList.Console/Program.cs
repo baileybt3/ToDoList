@@ -109,6 +109,25 @@ public class ToDoList
     public static void DeleteTask()
     {
         Console.WriteLine(" --- Delete Task  ---");
+
+        if (tasks.Count == 0)
+        {
+            Console.WriteLine("Your To-Do List is empty");
+            return;
+        }
+
+        Console.WriteLine("Enter the number of the task you want to delete: ");
+        string input = Console.ReadLine()!;
+
+        if (int.TryParse(input, out int index) && index > 0 && index <= tasks.Count)
+        {
+            Console.WriteLine($"Removed: {tasks[index - 1]}");
+            tasks.RemoveAt(index - 1);
+        }
+        else
+        {
+            Console.WriteLine("Invalid selection.");
+        }
     }
 
 
