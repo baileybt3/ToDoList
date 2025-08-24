@@ -5,11 +5,13 @@
 */
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 public class ToDoList
 {
 
-    static List<string> tasks = new List<string>();
+    // To-Do List
+    static List<TaskItem> tasks = new List<TaskItem>();
     public static void Main(string[] args)
     {
         int choice = 0;
@@ -62,6 +64,7 @@ public class ToDoList
 
     }
 
+    // View To-Do List
     public static void ViewList()
     {
         int index = 1;
@@ -73,22 +76,37 @@ public class ToDoList
             return;
         }
 
-        foreach (string task in tasks)
+        foreach (TaskItem task in tasks.OrderBy(t => t.Priority))
         {
-
-            Console.WriteLine($"{index}: {task}");
+            string status = task.IsCompleted ? "[x]" : "[ ]";
+            string priorityName = task.Priority == 1 ? "High" : task.Priority == 2 ? "Medium" : "Low";
+            Console.WriteLine($"{index}: {status} {task.Description} (Priority: {priorityName})");
             index++;
         }
 
     }
 
+    // Add Task
     public static void AddTask()
     {
         Console.WriteLine(" --- Add Task ---");
-        string newTask = Console.ReadLine()!;
-        tasks.Add(newTask);
+        Console.Write("Enter task description: ");
+        string desc = Console.ReadLine()!;
+
+        Console.Write("\nEnter priority  (1 = High, 2 = Medium, 3 = Low): ");
+        int priority;
+
+        while (!int.TryParse(Console.ReadLine(), out priority) || priority < 1 || priority > 3)
+        {
+            Console.Write("Invalid input. Please enter 1, 2, or 3: ");
+        }
+
+        tasks.Add(new TaskItem(desc, priority));
+        Console.WriteLine($"Added: {desc} (Priority {priority})");
     }
 
+
+    // Complete Task
     public static void CompleteTask()
     {
 
@@ -96,17 +114,14 @@ public class ToDoList
 
         for (int i = 0; i < tasks.Count; i++)
         {
-            Console.WriteLine($"{i + 1}: {tasks[i]}");
+            Console.WriteLine($"{i + 1}: {tasks[i].Description}");
         }
-        Console.Write("Enter the number of the task to mark complete: ");
-        string input = Console.ReadLine()!;
 
-        if (int.TryParse(input, out int index) && index > 0 && index <= tasks.Count)
+        Console.Write("Enter the number of the task to mark complete: ");
+        if (int.TryParse(Console.ReadLine(), out int index) && index > 0 && index <= tasks.Count)
         {
-            if (!tasks[index - 1].EndsWith("[x]")) {
-                tasks[index - 1] += " [x]";
-                Console.WriteLine($"Task marked complete: {tasks[index - 1]}");
-            }
+            tasks[index - 1].IsCompleted = true;
+            Console.WriteLine($"Task marked complete: {tasks[index - 1].Description}");
         }
         else
         {
@@ -115,6 +130,7 @@ public class ToDoList
 
     }
 
+    // Delete Task
     public static void DeleteTask()
     {
         Console.WriteLine(" --- Delete Task  ---");
@@ -130,7 +146,7 @@ public class ToDoList
 
         if (int.TryParse(input, out int index) && index > 0 && index <= tasks.Count)
         {
-            Console.WriteLine($"Removed: {tasks[index - 1]}");
+            Console.WriteLine($"Removed: {tasks[index - 1].Description}");
             tasks.RemoveAt(index - 1);
         }
         else
@@ -140,4 +156,25 @@ public class ToDoList
     }
 
 
+}
+
+public class TaskItem
+{
+    public string Description { get; set; }
+    public int Priority { get; set; }
+    public bool IsCompleted { get; set; }
+
+    public TaskItem(string description, int priority)
+    {
+        Description = description;
+        Priority = priority;
+        IsCompleted = false;
+    }
+
+    public override string ToString()
+    {
+        string status = IsCompleted ? "[x]" : "[ ]";
+        string priorityName = Priority == 1 ? "High" : Priority == 2 ? "Medium" : "Low";
+        return $"{status} {Description} (Priority: {priorityName})";
+    }
 }
