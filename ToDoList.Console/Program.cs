@@ -16,14 +16,15 @@ public class ToDoList
     {
         int choice = 0;
 
-        while (choice != 5)
+        while (choice != 6)
         {
             Console.WriteLine("\nPlease select and option: ");
             Console.WriteLine("1. View To-Do List");
             Console.WriteLine("2. Add Task");
             Console.WriteLine("3. Complete Task");
-            Console.WriteLine("4. Delete Task");
-            Console.WriteLine("5. Quit");
+            Console.WriteLine("4. Incomplete Task");
+            Console.WriteLine("5. Delete Task");
+            Console.WriteLine("6. Quit");
 
             string input = Console.ReadLine()!;
 
@@ -44,10 +45,14 @@ public class ToDoList
                         break;
 
                     case 4:
-                        DeleteTask();
+                        IncompleteTask();
                         break;
 
                     case 5:
+                        DeleteTask();
+                        break;
+
+                    case 6:
                         Console.WriteLine(" See ya! ");
                         break;
 
@@ -128,6 +133,39 @@ public class ToDoList
             Console.WriteLine("Invalid selection.");
         }
 
+    }
+
+    // Uncomplete Task
+    public static void IncompleteTask()
+    {
+        Console.WriteLine(" --- Select Task to Mark as Incomplete --- ");
+
+        for (int i = 0; i < tasks.Count; i++)
+        {
+            string status = tasks[i].IsCompleted ? "[x]" : "[ ]";
+            Console.WriteLine($"{i + 1}: {status} {tasks[i].Description}");
+        }
+
+        Console.Write("Enter the number of the task to unmark complete: ");
+        if (int.TryParse(Console.ReadLine(), out int index) && index > 0 && index <= tasks.Count)
+        {
+            var task = tasks[index - 1];
+
+            if (task.IsCompleted)
+            {
+                task.IsCompleted = false;
+                Console.WriteLine($"Task marked as incomplete: {task.Description}");
+            }
+            else
+            {
+                Console.WriteLine($"Task \"{task.Description}\" is already incomplete.");
+            }
+            
+        }
+        else
+        {
+            Console.WriteLine("Invalid selection.");
+        }
     }
 
     // Delete Task
