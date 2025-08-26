@@ -5,7 +5,6 @@
 */
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 public class ToDoList
 {
@@ -16,9 +15,10 @@ public class ToDoList
     {
         int choice = 0;
 
+        Console.WriteLine("\n === Welcome to your To-Do List === ");
         while (choice != 6)
         {
-            Console.WriteLine("\nPlease select and option: ");
+            Console.WriteLine("\nPlease select an option: ");
             Console.WriteLine("1. View To-Do List");
             Console.WriteLine("2. Add Task");
             Console.WriteLine("3. Complete Task");
@@ -81,11 +81,11 @@ public class ToDoList
             return;
         }
 
-        foreach (TaskItem task in tasks.OrderBy(t => t.Priority))
+        for (int i = 0; i < tasks.Count; i++)
         {
+            var task = tasks[i];
             string status = task.IsCompleted ? "[x]" : "[ ]";
-            string priorityName = task.Priority == 1 ? "High" : task.Priority == 2 ? "Medium" : "Low";
-            Console.WriteLine($"{index}: {status} {task.Description} (Priority: {priorityName})");
+            Console.WriteLine($"{index}: {status} {task.Description} (Priority: {task.Priority})");
             index++;
         }
 
@@ -99,13 +99,14 @@ public class ToDoList
         string desc = Console.ReadLine()!;
 
         Console.Write("\nEnter priority  (1 = High, 2 = Medium, 3 = Low): ");
-        int priority;
+        int priorityChoice;
 
-        while (!int.TryParse(Console.ReadLine(), out priority) || priority < 1 || priority > 3)
+        while (!int.TryParse(Console.ReadLine(), out priorityChoice) || priorityChoice < 1 || priorityChoice > 3)
         {
             Console.Write("Invalid input. Please enter 1, 2, or 3: ");
         }
 
+        Priority priority = (Priority)priorityChoice;
         tasks.Add(new TaskItem(desc, priority));
         Console.WriteLine($"Added: {desc} (Priority {priority})");
     }
@@ -196,13 +197,21 @@ public class ToDoList
 
 }
 
+// Priority Enum
+public enum Priority
+{
+    High = 1,
+    Medium = 2,
+    Low = 3
+}
+
 public class TaskItem
 {
     public string Description { get; set; }
-    public int Priority { get; set; }
+    public Priority Priority { get; set; }
     public bool IsCompleted { get; set; }
 
-    public TaskItem(string description, int priority)
+    public TaskItem(string description, Priority priority)
     {
         Description = description;
         Priority = priority;
@@ -212,7 +221,6 @@ public class TaskItem
     public override string ToString()
     {
         string status = IsCompleted ? "[x]" : "[ ]";
-        string priorityName = Priority == 1 ? "High" : Priority == 2 ? "Medium" : "Low";
-        return $"{status} {Description} (Priority: {priorityName})";
+        return $"{status} {Description} (Priority: {Priority})";
     }
 }
