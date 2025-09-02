@@ -81,9 +81,15 @@ public class ToDoList
             return;
         }
 
+        var sortedTasks = tasks
+            .OrderBy(t => t.Priority)
+            .ThenBy(t => t.Description)
+            .ToList();
+
+
         for (int i = 0; i < tasks.Count; i++)
         {
-            var task = tasks[i];
+            var task = sortedTasks[i];
             string status = task.IsCompleted ? "[x]" : "[ ]";
             Console.WriteLine($"{index}: {status} {task.Description} (Priority: {task.Priority})");
             index++;
