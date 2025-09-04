@@ -5,6 +5,7 @@
 */
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 public class ToDoList
 {
@@ -57,7 +58,7 @@ public class ToDoList
                         break;
 
                     default:
-                        Console.WriteLine("Invalid option. Please select a valid option");
+                        Console.WriteLine("\nInvalid option. Please select a valid option");
                         break;
                 }
             }
@@ -72,7 +73,6 @@ public class ToDoList
     // View To-Do List
     public static void ViewList()
     {
-        int index = 1;
         Console.WriteLine(" --- To-Do List ---\n");
 
         if (tasks.Count == 0)
@@ -81,19 +81,7 @@ public class ToDoList
             return;
         }
 
-        var sortedTasks = tasks
-            .OrderBy(t => t.Priority)
-            .ThenBy(t => t.Description)
-            .ToList();
-
-
-        for (int i = 0; i < tasks.Count; i++)
-        {
-            var task = sortedTasks[i];
-            string status = task.IsCompleted ? "[x]" : "[ ]";
-            Console.WriteLine($"{index}: {status} {task.Description} (Priority: {task.Priority})");
-            index++;
-        }
+        var sortedTasks = ShowTasks();
 
     }
 
@@ -124,16 +112,13 @@ public class ToDoList
 
         Console.WriteLine(" --- Select Task to Complete ---");
 
-        for (int i = 0; i < tasks.Count; i++)
-        {
-            Console.WriteLine($"{i + 1}: {tasks[i].Description}");
-        }
+        var sortedTasks = ShowTasks();
 
-        Console.Write("Enter the number of the task to mark complete: ");
-        if (int.TryParse(Console.ReadLine(), out int index) && index > 0 && index <= tasks.Count)
+        Console.Write("\nEnter the number of the task to mark complete: ");
+        if (int.TryParse(Console.ReadLine(), out int index) && index > 0 && index <= sortedTasks.Count)
         {
-            tasks[index - 1].IsCompleted = true;
-            Console.WriteLine($"Task marked complete: {tasks[index - 1].Description}");
+            sortedTasks[index - 1].IsCompleted = true;
+            Console.WriteLine($"Task marked complete: {sortedTasks[index - 1].Description}");
         }
         else
         {
@@ -147,16 +132,12 @@ public class ToDoList
     {
         Console.WriteLine(" --- Select Task to Mark as Incomplete --- ");
 
-        for (int i = 0; i < tasks.Count; i++)
-        {
-            string status = tasks[i].IsCompleted ? "[x]" : "[ ]";
-            Console.WriteLine($"{i + 1}: {status} {tasks[i].Description}");
-        }
+        var sortedTasks = ShowTasks();
 
-        Console.Write("Enter the number of the task to unmark complete: ");
-        if (int.TryParse(Console.ReadLine(), out int index) && index > 0 && index <= tasks.Count)
+        Console.Write("\nEnter the number of the task to unmark complete: ");
+        if (int.TryParse(Console.ReadLine(), out int index) && index > 0 && index <= sortedTasks.Count)
         {
-            var task = tasks[index - 1];
+            var task = sortedTasks[index - 1];
 
             if (task.IsCompleted)
             {
@@ -167,7 +148,7 @@ public class ToDoList
             {
                 Console.WriteLine($"Task \"{task.Description}\" is already incomplete.");
             }
-            
+
         }
         else
         {
@@ -186,18 +167,36 @@ public class ToDoList
             return;
         }
 
-        Console.WriteLine("Enter the number of the task you want to delete: ");
+        var sortedTasks = ShowTasks();
+
+        Console.WriteLine("\nEnter the number of the task you want to delete: ");
         string input = Console.ReadLine()!;
 
-        if (int.TryParse(input, out int index) && index > 0 && index <= tasks.Count)
+        if (int.TryParse(input, out int index) && index > 0 && index <= sortedTasks.Count)
         {
-            Console.WriteLine($"Removed: {tasks[index - 1].Description}");
-            tasks.RemoveAt(index - 1);
+            var taskToRemove = sortedTasks[index - 1];
+            Console.WriteLine($"Removed: {taskToRemove.Description}");
+            tasks.Remove(taskToRemove);
         }
         else
         {
             Console.WriteLine("Invalid selection.");
         }
+    }
+
+    // View Tasks
+    public static List<TaskItem> ShowTasks()
+    {
+        var sortedTasks = tasks
+            .OrderBy(t => t.Priority)
+            .ThenBy(t => t.Description)
+            .ToList();
+
+        for (int i = 0; i < sortedTasks.Count; i++)
+        {
+            Console.WriteLine($"{i + 1}: {sortedTasks[i]}");
+        }
+        return sortedTasks;
     }
 
 
@@ -210,6 +209,7 @@ public enum Priority
     Medium = 2,
     Low = 3
 }
+
 
 public class TaskItem
 {
