@@ -73,7 +73,7 @@ public class ToDoList
     // View To-Do List
     public static void ViewList()
     {
-        Console.WriteLine(" --- To-Do List ---\n");
+        Console.WriteLine("\n=== To-Do List ===\n");
 
         if (tasks.Count == 0)
         {
@@ -81,7 +81,7 @@ public class ToDoList
             return;
         }
 
-        var sortedTasks = ShowTasks();
+        ShowTasks();
 
     }
 
@@ -102,7 +102,7 @@ public class ToDoList
 
         Priority priority = (Priority)priorityChoice;
         tasks.Add(new TaskItem(desc, priority));
-        Console.WriteLine($"Added: {desc} (Priority {priority})");
+        Console.WriteLine($"Added: {desc} (Priority: {priority})");
     }
 
 
