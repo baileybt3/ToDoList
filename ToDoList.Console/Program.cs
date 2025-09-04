@@ -1,17 +1,20 @@
-﻿/* ToDoList App
-** This program is a ToDoList organizer.
-** Made By: Brandon Bailey
-** 8/23/2025
-*/
+﻿/* 
+ *To-Do List App
+ * A console-based task manager.
+ * Author: Brandon Bailey
+ * Date: 8/23/2025
+ */
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
+/// <summary>
+/// Represents a to-do list containing multiple tasks.
+/// </summary>
 public class ToDoList
 {
-
-    // To-Do List
     static List<TaskItem> tasks = new List<TaskItem>();
+
     public static void Main(string[] args)
     {
         int choice = 0;
@@ -70,7 +73,9 @@ public class ToDoList
 
     }
 
-    // View To-Do List
+    /// <summary>
+    /// Displays all tasks in to-do list, sorted by priority and description.
+    /// </summary>
     public static void ViewList()
     {
         Console.WriteLine("\n=== To-Do List ===\n");
@@ -85,7 +90,9 @@ public class ToDoList
 
     }
 
-    // Add Task
+    /// <summary>
+    /// Prompt user to add task to to-do list with description, and priority (high, medium, low)
+    /// </summary>
     public static void AddTask()
     {
         Console.WriteLine(" --- Add Task ---");
@@ -106,7 +113,9 @@ public class ToDoList
     }
 
 
-    // Complete Task
+    /// <summary>
+    /// Select a selected task in the lsit to be marked as complete [x].
+    /// </summary>
     public static void CompleteTask()
     {
 
@@ -127,7 +136,9 @@ public class ToDoList
 
     }
 
-    // Uncomplete Task
+    /// <summary>
+    /// Mark a selected task in the list as incomplete [ ].
+    /// </summary>
     public static void IncompleteTask()
     {
         Console.WriteLine(" --- Select Task to Mark as Incomplete --- ");
@@ -156,7 +167,9 @@ public class ToDoList
         }
     }
 
-    // Delete Task
+    /// <summary>
+    /// Delete a selected task from the to-do list.
+    /// </summary>
     public static void DeleteTask()
     {
         Console.WriteLine(" --- Delete Task  ---");
@@ -184,7 +197,10 @@ public class ToDoList
         }
     }
 
-    // View Tasks
+    /// <summary>
+    /// View all tasks in the to-do list sorted by priority then description.
+    /// </summary>
+    /// <returns></returns>
     public static List<TaskItem> ShowTasks()
     {
         var sortedTasks = tasks
