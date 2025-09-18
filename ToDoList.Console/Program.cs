@@ -203,6 +203,7 @@ public class ToDoList
     /// <returns></returns>
     public static List<TaskItem> ShowTasks()
     {
+        int totalTaskCount = 0;
         var sortedTasks = tasks
             .OrderBy(t => t.Priority)
             .ThenBy(t => t.Description)
@@ -211,7 +212,9 @@ public class ToDoList
         for (int i = 0; i < sortedTasks.Count; i++)
         {
             Console.WriteLine($"{i + 1}: {sortedTasks[i]}");
+            totalTaskCount += 1;
         }
+        Console.WriteLine($"\nTotal Tasks: {totalTaskCount}");
         return sortedTasks;
     }
 
