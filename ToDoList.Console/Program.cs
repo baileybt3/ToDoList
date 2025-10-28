@@ -4,20 +4,26 @@
  * Author: Brandon Bailey
  * Date: 8/23/2025
  */
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.IO;
+using System.Text.Json;
 
 /// <summary>
 /// Represents a to-do list containing multiple tasks.
 /// </summary>
 public class ToDoList
 {
+    static string filePath = "tasks.json";
     static List<TaskItem> tasks = new List<TaskItem>();
 
     public static void Main(string[] args)
     {
-        int choice = 0;
+
+        tasks = FileManager.LoadTasks(filePath);
+       int choice = 0;
 
         Console.WriteLine("\n === Welcome to your To-Do List === ");
         while (choice != 6)
@@ -57,7 +63,8 @@ public class ToDoList
                         break;
 
                     case 6:
-                        Console.WriteLine(" See ya! ");
+                        Console.WriteLine("Saving tasks, Goodbye!");
+                        FileManager.SaveTasks(filePath, tasks);
                         break;
 
                     default:
@@ -109,6 +116,7 @@ public class ToDoList
 
         Priority priority = (Priority)priorityChoice;
         tasks.Add(new TaskItem(desc, priority));
+        FileManager.SaveTasks(filePath, tasks);
         Console.WriteLine($"Added: {desc} (Priority: {priority})");
     }
 
@@ -127,6 +135,7 @@ public class ToDoList
         if (int.TryParse(Console.ReadLine(), out int index) && index > 0 && index <= sortedTasks.Count)
         {
             sortedTasks[index - 1].IsCompleted = true;
+            FileManager.SaveTasks(filePath, tasks);
             Console.WriteLine($"Task marked complete: {sortedTasks[index - 1].Description}");
         }
         else
@@ -153,6 +162,7 @@ public class ToDoList
             if (task.IsCompleted)
             {
                 task.IsCompleted = false;
+                FileManager.SaveTasks(filePath, tasks);
                 Console.WriteLine($"Task marked as incomplete: {task.Description}");
             }
             else
@@ -190,6 +200,7 @@ public class ToDoList
             var taskToRemove = sortedTasks[index - 1];
             Console.WriteLine($"Removed: {taskToRemove.Description}");
             tasks.Remove(taskToRemove);
+            FileManager.SaveTasks(filePath, tasks);
         }
         else
         {
@@ -247,5 +258,25 @@ public class TaskItem
     {
         string status = IsCompleted ? "[x]" : "[ ]";
         return $"{status} {Description} (Priority: {Priority})";
+    }
+}
+
+public class FileManager
+{
+    public static void SaveTasks(string filePath, List<TaskItem> tasks)
+    {
+        string json = JsonSerializer.Serialize(tasks, new JsonSerializerOptions { WriteIndented = true });
+        File.WriteAllText(filePath, json);
+    }
+
+    public static List<TaskItem> LoadTasks(string filePath)
+    {
+        if (!File.Exists(filePath))
+        {
+            return new List<TaskItem>();
+        }
+        string json = File.ReadAllText(filePath);
+        return JsonSerializer.Deserialize<List<TaskItem>>(json) ?? new List<TaskItem>();
+        
     }
 }
