@@ -12,7 +12,7 @@ using System.IO;
 using System.Text.Json;
 
 /// <summary>
-/// Represents a to-do list containing multiple tasks.
+/// Represents a to-do list app that manages tasks in a JSON file.
 /// </summary>
 public class ToDoList
 {
@@ -23,8 +23,9 @@ public class ToDoList
     {
 
         tasks = FileManager.LoadTasks(filePath);
-       int choice = 0;
+        int choice = 0;
 
+        // Display Menu while choice is not quit
         Console.WriteLine("\n === Welcome to your To-Do List === ");
         while (choice != 6)
         {
@@ -109,6 +110,7 @@ public class ToDoList
         Console.Write("\nEnter priority  (1 = High, 2 = Medium, 3 = Low): ");
         int priorityChoice;
 
+        // Input handling
         while (!int.TryParse(Console.ReadLine(), out priorityChoice) || priorityChoice < 1 || priorityChoice > 3)
         {
             Console.Write("Invalid input. Please enter 1, 2, or 3: ");
@@ -211,10 +213,8 @@ public class ToDoList
     /// <summary>
     /// View all tasks in the to-do list sorted by priority then description.
     /// </summary>
-    /// <returns></returns>
     public static List<TaskItem> ShowTasks()
     {
-        int totalTaskCount = 0;
         var sortedTasks = tasks
             .OrderBy(t => t.Priority)
             .ThenBy(t => t.Description)
@@ -223,9 +223,8 @@ public class ToDoList
         for (int i = 0; i < sortedTasks.Count; i++)
         {
             Console.WriteLine($"{i + 1}: {sortedTasks[i]}");
-            totalTaskCount += 1;
         }
-        Console.WriteLine($"\nTotal Tasks: {totalTaskCount}");
+        Console.WriteLine($"\nTotal Tasks: {sortedTasks.Count}");
         return sortedTasks;
     }
 
@@ -241,6 +240,9 @@ public enum Priority
 }
 
 
+/// <summary>
+/// A single tasks in List<TaskItem> with description, priority, and status.
+/// </summary>
 public class TaskItem
 {
     public string Description { get; set; }
@@ -261,6 +263,10 @@ public class TaskItem
     }
 }
 
+
+/// <summary>
+/// Handles saving and loadings task from JSON file.
+/// </summary>
 public class FileManager
 {
     public static void SaveTasks(string filePath, List<TaskItem> tasks)
@@ -277,6 +283,6 @@ public class FileManager
         }
         string json = File.ReadAllText(filePath);
         return JsonSerializer.Deserialize<List<TaskItem>>(json) ?? new List<TaskItem>();
-        
+
     }
 }
